@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ETG Geschenk-Laufband</title>
+<style>
+  :root {
+    --row-gap: 18px;
+    --card-gap: 18px;
+    --card-width: 170px;
+    --card-height: 116px;
+    --duration-top: 42s;
+    --duration-bottom: 48s;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent !important;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .stage {
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--row-gap);
+    overflow: hidden;
+    background: transparent;
+  }
+  .track-window {
+    width: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+  .track {
+    display: flex;
+    width: max-content;
+    gap: var(--card-gap);
+    will-change: transform;
+  }
+  .track.top { animation: move-right var(--duration-top) linear infinite; }
+  .track.bottom { animation: move-right var(--duration-bottom) linear infinite; }
+  .group {
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--card-gap);
+  }
+  .gift {
+    width: var(--card-width);
+    height: var(--card-height);
+    flex: 0 0 var(--card-width);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    padding: 8px 9px 7px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #fff;
+    text-align: center;
+  }
+  .emoji {
+    height: 43px;
+    line-height: 43px;
+    font-size: 37px;
+    filter: drop-shadow(0 0 5px rgba(255, 180, 0, .65));
+  }
+  .name {
+    width: 100%;
+    min-height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffe45c;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.05;
+    text-shadow: 0 1px 3px #000, 0 0 6px #ff6500;
+  }
+  .interaction {
+    width: 100%;
+    padding: 4px 5px;
+    border: 1px solid #4ccaff;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .72);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.05;
+    text-shadow: 0 1px 2px #000;
+    box-shadow: 0 0 6px rgba(0, 160, 255, .85);
+  }
+  @keyframes move-right {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+  @media (max-width: 700px) {
+    :root { --card-width: 145px; --card-height: 108px; --card-gap: 12px; }
+    .emoji { font-size: 32px; height: 37px; line-height: 37px; }
+    .name { font-size: 13px; }
+    .interaction { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="track-window">
+    <div class="track top" id="topTrack"></div>
+  </div>
+  <div class="track-window">
+    <div class="track bottom" id="bottomTrack"></div>
+  </div>
+</div>
+<script>
+const topGifts = [
+  ["🐌", "Zeitlupe", "Müll"],
+  ["💜", "Freundschaftshalsband", "Reinigen"],
+  ["💗", "Rosa", "Verschmutzen"],
+  ["🐳", "Waltauchen", "Bankrott"],
+  ["🍦", "Eiswaffel", "Kiste"],
+  ["👏", "Applaus", "Licht aus"],
+  ["🫧", "Kaugummiblase", "Produkt zerstören"],
+  ["⭐", "Aufstrebender Star", "-200"],
+  ["💕", "1K Likes", "Kunde"]
+];
+const bottomGifts = [
+  ["❤️", "Licht an", "Beliebt werden"],
+  ["🌹", "Rose", "Kunden"],
+  ["👐", "Herz in Händen", "Teleportieren"],
+  ["🌸", "Parfüm", "Dieb"],
+  ["🍩", "Donut", "Gefängnis"],
+  ["🪄", "Zeptar", "Laden öffnen"],
+  ["💐", "Blühende Melodie", "Laden schließen"],
+  ["🎩", "Hut mit Schnurrbart", "Geld geben"]
+];
+
+function makeCard([emoji, name, action]) {
+  const card = document.createElement("div");
+  card.className = "gift";
+  const icon = document.createElement("div");
+  icon.className = "emoji";
+  icon.textContent = emoji;
+  const title = document.createElement("div");
+  title.className = "name";
+  title.textContent = name;
+  const interaction = document.createElement("div");
+  interaction.className = "interaction";
+  interaction.textContent = action;
+  card.append(icon, title, interaction);
+  return card;
+}
+function buildTrack(id, gifts) {
+  const track = document.getElementById(id);
+  // Two identical groups create a seamless loop; animation travels left-to-right.
+  for (let copy = 0; copy < 2; copy++) {
+    const group = document.createElement("div");
+    group.className = "group";
+    gifts.forEach(gift => group.appendChild(makeCard(gift)));
+    track.appendChild(group);
+  }
+}
+buildTrack("topTrack", topGifts);
+buildTrack("bottomTrack", bottomGifts);
+</script>
+</body>
+</html>
